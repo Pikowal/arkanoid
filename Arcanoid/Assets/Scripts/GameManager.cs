@@ -1,5 +1,5 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -9,17 +9,15 @@ public class GameManager : MonoBehaviour
     public Text scoreText;
     public Text liveText;
     public bool gameOver;
+    public GameObject gameOverPanel;
+    private int numberOfBricks;
 
     // Start is called before the first frame update
-    void Start()
-    {
-        Init();
-    }
+    void Start() => Init();
 
     // Update is called once per frame
     void Update()
     {
-        
     }
 
     public void UpdateLives(int changeInLives)
@@ -33,7 +31,7 @@ public class GameManager : MonoBehaviour
 
         liveText.text = $"Lives: {lives}";
     }
-   
+
     public void UpdateScores(int changeScore)
     {
         score += changeScore;
@@ -44,11 +42,32 @@ public class GameManager : MonoBehaviour
     {
         liveText.text = $"Lives: {lives}";
         scoreText.text = $"Score: {score}";
+        numberOfBricks = GameObject.FindGameObjectsWithTag("Block").Length;
+    }
+
+    public void UpdateNumberOfBricks()
+    {
+        numberOfBricks--;
+        if(numberOfBricks <= 0)
+        {
+            GameOver();
+        }
     }
 
     private void GameOver()
     {
         gameOver = true;
+        gameOverPanel.SetActive(true);
     }
 
+    public void PlayAgain()
+    {
+        SceneManager.LoadScene("MainScene");
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
+        Debug.Log("Game has been closed");
+    }
 }

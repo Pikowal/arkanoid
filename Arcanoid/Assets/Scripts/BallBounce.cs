@@ -49,12 +49,28 @@ public class BallBounce : MonoBehaviour
     {
         if (collision.transform.CompareTag("Block"))
         {
-            var boom =  Instantiate(explosion, collision.transform.position, collision.transform.rotation);
-            Destroy(collision.gameObject);
+            var brickScript = collision.gameObject.GetComponent<BlockScript>();
 
-            GM.UpdateScores(collision.gameObject.GetComponent<BlockScript>().points);
+            if (brickScript.blockHP == 3)
+            {
+                brickScript.BreakBlock();
+                GM.UpdateScores(brickScript.points);
+            }
+            else if (brickScript.blockHP == 2)
+            {
+                brickScript.SecondBreakBlock();
+                GM.UpdateScores(brickScript.points);
+            }
+            else
+            {
+                var boom = Instantiate(explosion, collision.transform.position, collision.transform.rotation);
+                Destroy(collision.gameObject);
 
-            Destroy(boom.gameObject, 2.5f);
+                GM.UpdateScores(brickScript.points + 1);
+                GM.UpdateNumberOfBricks();
+
+                Destroy(boom.gameObject, 2.5f);
+            }           
         }
     }
 }
